@@ -1,5 +1,6 @@
 package f.f;
 
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -14,11 +15,14 @@ public final class F extends JavaPlugin implements Listener {
     static final String tbname="sniffinfo";//your message info table
     static final String createtable=tbname+"(id serial primary key,name varchar(255),ip varchar(255),msg text)";
     static final String insertcommand="insert into "+tbname+"(name,ip,msg) values('%s','%s','%s');";
-    static final String pass="";
-    static final String user="root";
+    //static final String pass="";
+    //static final String user="root";
     public void setcon() throws Exception{
         Class.forName("com.mysql.jdbc.Driver");
-        sqliteconn= DriverManager.getConnection("jdbc:mysql://localhost/",user,pass);
+        FileConfiguration fc=getConfig();
+        String password=fc.getString("pass");
+        String username=fc.getString("user");
+        sqliteconn= DriverManager.getConnection("jdbc:mysql://localhost/",username,password);
         Statement st=sqliteconn.createStatement();
         st.execute("create database if not exists "+dbname);
         st.execute("use "+dbname+";");
